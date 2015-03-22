@@ -1,0 +1,17 @@
+2011-03-16  Hirochika Asai  <asai@scyphus.co.jp>
+
+    * decapwap.c: modified comments
+
+
+2010-05-21  Hirochika Asai  <asai@scyphus.co.jp>
+
+    * decapwap.c: added usage() to report errors of the arguments
+
+    * decapwap.c: changed the queue from STAILQ to SLIST
+
+
+2010-05-20  Hirochika Asai  <asai@scyphus.co.jp>
+
+    * decapwap.c: added, and polished the code
+
+    * decapwap-0.1.0a.tar.gz: alpha release of the initial version
