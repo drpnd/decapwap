@@ -1,11 +1,7 @@
 /*_
- * Copyright 2010 Scyphus Solutions Co.,Ltd.  All rights reserved.
- *
- * Authors:
- *      Hirochika Asai  <asai@scyphus.co.jp>
+ * Copyright (c) 2015 Hirochika Asai <asai@jar.jp>
+ * All rights reserved.
  */
-
-/* $Id: decapwap.c,v 0c6c84a5ee88 2011/03/16 06:50:57 Hirochika $ */
 
 #include "config.h"
 
@@ -306,10 +302,30 @@ cb_dumper(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes)
     /* Check ether type */
     if ( 0x8100 == type ) {
         /* VLAN */
+        offset += 4;
+        type = bytes2uint16((u_char *)bytes+offset);
+        if ( 0x0806 == type ) {
 #if DEBUG
-        fprintf(stderr, "unsupported protocol: VLAN\n");
+            fprintf(stderr, "unsupported protocol: ARP\n");
 #endif
-        return;
+            return;
+        } else if ( 0x0800 == type ) {
+            /* IPv4: supported */
+            offset += 2;
+            (void)proc_ipv4(user, h, bytes, offset);
+        } else if ( 0x86dd == type ) {
+            /* IPv6 */
+#if DEBUG
+            fprintf(stderr, "unsupported protocol: IPv6\n");
+#endif
+            return;
+        } else {
+            /* Unsupported */
+#if DEBUG
+            fprintf(stderr, "unsupported protocol: unknown\n");
+#endif
+            return;
+        }
     } else if ( 0x0806 == type ) {
         /* ARP */
 #if DEBUG
